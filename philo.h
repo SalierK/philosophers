@@ -16,8 +16,6 @@ typedef struct s_philo
     int error_state;
 } t_philo;
 
-char	*ft_itoa(int n);
-int	ft_numlen(int n, int base);
 void intitilize_philos(t_philo *philos_struct,int argc,char **argv);
-int	ft_atoi(const char *str);
+int	ft_atoi(const char *str, t_philo *philo_struct);
 #endif
