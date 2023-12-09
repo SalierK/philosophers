@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 14:36:40 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/09 03:54:31 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/09 04:08:18 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void initilize_per_philo(t_detail_philo *detail_philo, t_philo *philos_struct, p
         detail_philo[i].first_eat = philos_struct->first_eat;
         detail_philo[i].philos_strcut = malloc(sizeof(t_philo));
         detail_philo[i].philos_strcut = philos_struct;
+        detail_philo[i].is_eat = 0;
 		i++;
 	}
 	detail_philo[i - 1].right_fork = mutex[0];
