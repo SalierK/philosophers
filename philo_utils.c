@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 14:40:14 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/09 03:47:49 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/09 08:05:22 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,6 @@ void	ft_sleep(long time)
 	{
 		if ((get_current_time_ms() - current_time) >= time)
 			break ;
-		usleep(5);
+		usleep(1);
 	}
 }

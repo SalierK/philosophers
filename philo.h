@@ -27,18 +27,23 @@ typedef struct s_detail_philo
 	long			first_eat;
 	int 			is_eat;
 	t_philo			*philos_strcut;
+	int				death_status;
+	long			last_meal;
+	long			last_sleep;
+	long			last_think;
+	long			tour;
 } t_detail_philo;
 
 
-
-
+int death_check_after_eat(t_detail_philo *detail_philo);
+int death_check_after_sleep(t_detail_philo *detail_philo);
 void intitilize_philos(t_philo *philos_struct,int argc,char **argv);
 void initilize_per_philo(t_detail_philo *detail_philo, t_philo *philos_struct, pthread_mutex_t *mutex);
 void *work_philo(void *philos_structt);
 void create_philos(pthread_t *thread, t_detail_philo *detail_philo, t_philo *philos_struct, pthread_mutex_t *mutex);
-void work_eat(t_detail_philo *detail_philo, int *loop);
+void work_eat(t_detail_philo *detail_philo);
 long get_current_time_ms(void);
 void	ft_sleep(long time);
-
+int all_thrade_runer(t_detail_philo *detail_philo);
 int	ft_atoi(const char *str, t_philo *philo_struct);
 #endif

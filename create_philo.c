@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 19:52:02 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/09 02:40:55 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/09 07:57:02 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,6 @@ void create_philos(pthread_t *thread, t_detail_philo *detail_philo, t_philo *phi
 	{
 		pthread_create(&thread[i], NULL, work_philo, (void *)&detail_philo[i]);
 	}
-    // while (++i < philos_struct->pnbr)
-	// {
-	// 	if(i%2 == 0)
-	// 		pthread_create(&thread[i], NULL, work_philo, (void *)&detail_philo[i]);
-	// }
-	// i = -1;
-	// while (++i < philos_struct->pnbr)
-	// {
-	// 	if(i%2 == 1)
-	// 		pthread_create(&thread[i], NULL, work_philo, (void *)&detail_philo[i]);
-	// }
 	i = -1;
 	while (++i < philos_struct->pnbr)
 		pthread_join(thread[i], NULL);
