@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 14:36:40 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/06 16:16:59 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/09 03:54:31 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void intitilize_philos(t_philo *philos_struct,int argc,char **argv)
     philos_struct->ttsleep = -1;
     philos_struct->notepme = -1;
     philos_struct->error_state = 0;
+    philos_struct->first_eat = get_current_time_ms();
     if(argv[++i])
         philos_struct->pnbr = ft_atoi(argv[i], philos_struct);
     if(argv[++i])
@@ -37,4 +38,24 @@ void intitilize_philos(t_philo *philos_struct,int argc,char **argv)
         philos_struct->error_state = 1;
     if(argc > 6)
         philos_struct->error_state = 1;
+}
+
+void initilize_per_philo(t_detail_philo *detail_philo, t_philo *philos_struct, pthread_mutex_t *mutex)
+{
+	int i;
+	
+	i = 0;
+	
+	while(i < philos_struct->pnbr)
+	{
+		detail_philo[i].philo_nbr = i;
+		detail_philo[i].left_fork = mutex[i];
+		detail_philo[i].right_fork = mutex[i + 1];
+        detail_philo[i].first_eat = philos_struct->first_eat;
+        detail_philo[i].philos_strcut = malloc(sizeof(t_philo));
+        detail_philo[i].philos_strcut = philos_struct;
+		i++;
+	}
+	detail_philo[i - 1].right_fork = mutex[0];
+
 }
