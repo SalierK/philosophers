@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 20:04:35 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/09 08:07:01 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/11 20:59:17 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void work_eat(t_detail_philo *detail_philo)
 int work_sleep(t_detail_philo *detail_philo)
 {
 	long j;
-	
+
+    pthread_mutex_lock(&detail_philo->sleep_lock);
 	ft_sleep(detail_philo->philos_strcut->ttsleep);
 	j = get_current_time_ms() - detail_philo->first_eat;
 	detail_philo->last_sleep = j;
@@ -39,6 +40,7 @@ int work_sleep(t_detail_philo *detail_philo)
 	if(detail_philo->death_status == 1)
 		return (0);
 	printf("%ld %d is sleeping\n",j, detail_philo->philo_nbr + 1);
+	pthread_mutex_unlock(&detail_philo->sleep_lock);
 	return (0);
 }
 
@@ -46,12 +48,16 @@ void work_think(t_detail_philo *detail_philo)
 {
 	long j;
 	int a;
-
+	
+	pthread_mutex_lock(&detail_philo->sleep_lock);
+    pthread_mutex_lock(&detail_philo->eat_lock);
 	a = detail_philo->philos_strcut->ttdie -detail_philo->philos_strcut->first_eat;
 	a-=detail_philo->philos_strcut->ttsleep;
 	ft_sleep(a);
 	j = get_current_time_ms() - detail_philo->first_eat;
 	printf("%ld %d is thinking.\n",j, detail_philo->philo_nbr + 1);
+	pthread_mutex_unlock(&detail_philo->eat_lock);
+    pthread_mutex_unlock(&detail_philo->sleep_lock);
 }
 
 void *work_philo(void *philos_structt)
@@ -66,23 +72,23 @@ void *work_philo(void *philos_structt)
 			ft_sleep(detail_philo->philos_strcut->tteat);
 			detail_philo->is_eat = 1;
 		}
-		work_eat(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		death_check_after_sleep((t_detail_philo *)philos_structt);
+		work_eat((t_detail_philo *)philos_structt);
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
-		death_check_after_eat(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		death_check_after_eat((t_detail_philo *)philos_structt);
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
-		death_check_after_sleep(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
-		work_sleep(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		work_sleep((t_detail_philo *)philos_structt);
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
-		death_check_after_sleep(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		death_check_after_sleep((t_detail_philo *)philos_structt);
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
-		work_think(detail_philo);
-		if(all_thrade_runer(detail_philo))
+		work_think((t_detail_philo *)philos_structt);
+		if(all_thrade_runer((t_detail_philo *)philos_structt))
 			break;
 		detail_philo->tour += 1;
 	}
