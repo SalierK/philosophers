@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/09 04:46:05 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/15 17:02:23 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/15 17:32:35 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ int death_check_after_sleep(t_detail_philo *detail_philo)
         all_dead(detail_philo);
     }
     pthread_mutex_unlock(detail_philo->error_lock);
+    usleep(100);
     return (0);
 }
 

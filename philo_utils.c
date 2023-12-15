@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/01 14:40:14 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/11 19:30:42 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/15 18:44:22 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ long	get_current_time_ms(void)
 	gettimeofday(&tv, (void *)0);
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
-void	ft_sleep(long time)
+void	ft_sleep(long time, t_detail_philo *detail_philo)
 {
 	long	current_time;
 
@@ -50,6 +50,6 @@ void	ft_sleep(long time)
 	{
 		if ((get_current_time_ms() - current_time) >= time)
 			break ;
-		usleep(10);
+		usleep(detail_philo->philo_nbr * 2);
 	}
 }

@@ -55,7 +55,7 @@ void 	*work_philo(void *philos_structt);
 void 	create_philos(pthread_t *thread, t_detail_philo *detail_philo, t_philo *philos_struct);
 int 	work_eat(t_detail_philo *detail_philo);
 long 	get_current_time_ms(void);
-void	ft_sleep(long time);
+void	ft_sleep(long time, t_detail_philo *detail_philo);
 int		all_thrade_runer(t_detail_philo *detail_philo);
 int		ft_atoi(const char *str, t_philo *philo_struct);
 void	all_dead(t_detail_philo *detail_philo);

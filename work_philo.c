@@ -6,7 +6,7 @@
 /*   By: kkilitci <kkilitci@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/08 20:04:35 by kkilitci          #+#    #+#             */
-/*   Updated: 2023/12/15 17:11:38 by kkilitci         ###   ########.fr       */
+/*   Updated: 2023/12/15 19:43:27 by kkilitci         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,83 +15,78 @@
 int work_eat(t_detail_philo *detail_philo)
 {
 	long j;
-
-	//printf("%p \n",&detail_philo->left_fork);
 	pthread_mutex_lock(detail_philo->error_lock);
 	if(detail_philo->death_status == 1)
 		return (0);
+	pthread_mutex_unlock(detail_philo->error_lock);
 	j = get_current_time_ms() - detail_philo->first_eat;
 	pthread_mutex_lock(detail_philo->left_fork);
 	printf("%ld %d has taken a right fork\n",j, detail_philo->philo_nbr + 1);
     pthread_mutex_lock(detail_philo->right_fork);
     printf("%ld %d has taken a left fork\n",j, detail_philo->philo_nbr + 1);
     printf("%ld %d is eating\n",j, detail_philo->philo_nbr + 1);
-	pthread_mutex_unlock(detail_philo->error_lock);
-	pthread_mutex_unlock(detail_philo->left_fork);
-	//printf("%ld %d has drop a left fork\n",j, detail_philo->philo_nbr + 1);
-    pthread_mutex_unlock(detail_philo->right_fork);
-	ft_sleep(detail_philo->philos_strcut->tteat);
+	ft_sleep(detail_philo->philos_strcut->tteat, detail_philo);
+	pthread_mutex_unlock(detail_philo->right_fork);
+    pthread_mutex_unlock(detail_philo->left_fork);
 	return (0);
-	//printf("%ld %d has drop a right fork\n",j, detail_philo->philo_nbr + 1);
 }
 
 int work_sleep(t_detail_philo *detail_philo)
 {
 	long j;
 
-	ft_sleep(detail_philo->philos_strcut->ttsleep);
-	j = get_current_time_ms() - detail_philo->first_eat;
-	detail_philo->last_sleep = j;
-	pthread_mutex_lock(detail_philo->error_lock);
 	if(detail_philo->death_status == 1)
 	{
-		pthread_mutex_unlock(detail_philo->error_lock);
+		//pthread_mutex_unlock(detail_philo->message_lock);
 		return (0);
 	}
+	j = get_current_time_ms() - detail_philo->first_eat;
+	detail_philo->last_sleep = j;
+	//pthread_mutex_lock(detail_philo->message_lock);
+
 	printf("%ld %d is sleeping\n",j, detail_philo->philo_nbr + 1);
-	pthread_mutex_unlock(detail_philo->error_lock);
+	//pthread_mutex_unlock(detail_philo->message_lock);
+	ft_sleep(detail_philo->philos_strcut->ttsleep, detail_philo);
 	return (0);
 }
 
-void work_think(t_detail_philo *detail_philo)
+int work_think(t_detail_philo *detail_philo)
 {
 	long j;
-	int a;
-	
+	long a;
+
+	if(detail_philo->death_status == 1)
+		return (1);
 	a = detail_philo->philos_strcut->ttdie -detail_philo->philos_strcut->first_eat;
-	a-=detail_philo->philos_strcut->ttsleep;
-	ft_sleep(a);
+	a -= detail_philo->philos_strcut->ttsleep;
 	j = get_current_time_ms() - detail_philo->first_eat;
+	detail_philo->last_think = j;
+	//pthread_mutex_lock(detail_philo->message_lock);
+	ft_sleep(a, detail_philo);
 	printf("%ld %d is thinking.\n",j, detail_philo->philo_nbr + 1);
+	//pthread_mutex_unlock(detail_philo->message_lock);
+
+	return 0;
 }
 
 void *work_philo(void *philos_structt)
 {
 	t_detail_philo *detail_philo;
+	int a;
 	
 	detail_philo = (t_detail_philo *)philos_structt;
-	//printf("philo_nbr = %d\n",detail_philo->philo_nbr);
-	if(detail_philo->philo_nbr%2 == 0 && detail_philo->is_eat == 0)
-	{
-		ft_sleep(detail_philo->philos_strcut->tteat);
-		detail_philo->is_eat = 1;
-	}
+	usleep(2 * (detail_philo->philo_nbr + 1));
+	a = -1;
+	if(detail_philo->philo_nbr%2 == 0)
+		ft_sleep(detail_philo->philos_strcut->tteat, detail_philo);
 	while (1)
 	{	
-		if(all_thrade_runer(detail_philo))
-			break;
-		death_check_after_sleep(detail_philo);
 		work_eat(detail_philo);
-		if(all_thrade_runer(detail_philo))
-			break;
 		death_check_after_sleep(detail_philo);
-		if(all_thrade_runer(detail_philo))
-			break;
 		work_sleep(detail_philo);
 		death_check_after_sleep(detail_philo);
-		if(all_thrade_runer(detail_philo))
-			break;
 		work_think(detail_philo);
+		death_check_after_sleep(detail_philo);
 		if(all_thrade_runer(detail_philo))
 			break;
 		detail_philo->tour += 1;
